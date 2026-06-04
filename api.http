@@ -1,4 +1,29 @@
 POST http://localhost:3000/librosInsertar
 Content-Type: application/json
 
-{}
+[
+    {
+        "id": 3,
+        "Nombre": "Harry Potter y la cámara secreta",
+        "Genero": 2,
+        "Autor": "J.K. Rowling",
+        "fecha_recepcion": "2026-06-03",
+        "cantidad_copias": 5,
+        "edad_sugerida": 12,
+        "editorial": "Salamandra",
+        "precio": 13990,
+        "estado": 1
+    },
+    {
+        "id": 4,
+        "Nombre": "El código Da Vinci",
+        "Genero": 3,
+        "Autor": "Dan Brown",
+        "fecha_recepcion": "2026-06-03",
+        "cantidad_copias": 3,
+        "edad_sugerida": 16,
+        "editorial": "Planeta",
+        "precio": 11990,
+        "estado": 1
+    }
+]

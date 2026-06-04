@@ -8,21 +8,9 @@ const PORT = 3000;
 app.use(express.json());
 //controlador para la ruta /LibrosInsertar que inserta libros en la base de datos
 app.post("/librosInsertar", async (req, res) => {
-    const libros =[
-        
-        {
-        "id": 2,
-        "Nombre": "El resplandor",
-        "Genero": 2,
-        "Autor": "Stephen King",
-        "fecha_recepcion": "2026-06-03",
-        "cantidad_copias": 2,
-        "edad_sugerida": 18,
-        "editorial": "Debolsillo",
-        "precio": 15990,
-        "estado": 1
-        }
-    ];
+
+    const libros = Array.isArray(req.body) ? req.body : [req.body];
+    
 
     const query = "INSERT INTO Libro (id, Nombre, Genero, Autor, fecha_recepcion, cantidad_copias, edad_sugerida, editorial, precio, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
