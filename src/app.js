@@ -9,18 +9,18 @@ app.use(express.json());
 //controlador para la ruta /LibrosInsertar que inserta libros en la base de datos
 app.post("/librosInsertar", async (req, res) => {
     const libros =[
+        
         {
-        "id": 1,
-        "Nombre": "Cien años de soledad",
-        "Genero": "1",
-        "Autor": "Gabriel García Márquez",
-        "fecha_recepcion": "2026-03-15",
-        "cantidad_copias": 3,
-        "edad_sugerida": 15,
-        "editorial": "Sudamericana",
-        "precio": 18990,
-        "estado": "1"
-         
+        "id": 2,
+        "Nombre": "El resplandor",
+        "Genero": 2,
+        "Autor": "Stephen King",
+        "fecha_recepcion": "2026-06-03",
+        "cantidad_copias": 2,
+        "edad_sugerida": 18,
+        "editorial": "Debolsillo",
+        "precio": 15990,
+        "estado": 1
         }
     ];
 
