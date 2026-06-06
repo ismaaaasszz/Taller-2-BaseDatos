@@ -1,29 +1,42 @@
-POST http://localhost:3000/librosInsertar
+//Prueba 1: Ver si el servidor responde en general
+GET http://localhost:3000/test-api
+
+### -----LIBRO----- ###
+
+//Insertar el libro
+POST http://localhost:3000/libros
 Content-Type: application/json
 
-[
-    {
-        "id": 3,
-        "Nombre": "Harry Potter y la cámara secreta",
-        "Genero": 2,
-        "Autor": "J.K. Rowling",
-        "fecha_recepcion": "2026-06-03",
-        "cantidad_copias": 5,
-        "edad_sugerida": 12,
-        "editorial": "Salamandra",
-        "precio": 13990,
-        "estado": 1
-    },
-    {
-        "id": 4,
-        "Nombre": "El código Da Vinci",
-        "Genero": 3,
-        "Autor": "Dan Brown",
-        "fecha_recepcion": "2026-06-03",
-        "cantidad_copias": 3,
-        "edad_sugerida": 16,
-        "editorial": "Planeta",
-        "precio": 11990,
-        "estado": 1
-    }
-]
+{
+  "id": 1,
+  "Nombre": "El Resplandor",
+  "Genero": 1,
+  "Autor": "Stephen King",
+  "fecha_recepcion": "2026-06-06",
+  "cantidad_copias": 5,
+  "edad_sugerida": 18,
+  "editorial": "Debolsillo",
+  "precio": 15000,
+  "estado": true
+}
+
+###
+
+###Listar todos los Libros Disponibles con Stock (Punto 11 del Taller)
+GET http://localhost:3000/libros/disponibles
+
+
+### -----TRABAJADOR----- ###
+
+//No funciona
+//Probar Registro de Trabajador
+POST http://localhost:3000/trabajador/registro
+Content-Type: application/json
+
+{
+  "rut": "12345678-9",
+  "nombre": "Diego Pérez",
+  "correo": "diego@ucn.cl",
+  "contrasena": "clave123",
+  "bono": 50000
+}

@@ -1,41 +1,23 @@
 import express from 'express';
-import connection from './database/DataBase.js';
+import trabajadorRouter from './router/Trabajador.js'; 
+import libroRouter from './router/Libro.js';           
 
 const app = express();
 const PORT = 3000;
 
-// Middleware para parsear JSON
+// Middleware obligatorio para leer formato JSON
 app.use(express.json());
-//controlador para la ruta /LibrosInsertar que inserta libros en la base de datos
-app.post("/librosInsertar", async (req, res) => {
 
-    const libros = Array.isArray(req.body) ? req.body : [req.body];
-    
-
-    const query = "INSERT INTO Libro (id, Nombre, Genero, Autor, fecha_recepcion, cantidad_copias, edad_sugerida, editorial, precio, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
-    let LibrosInsertados;
-    for (const libro of libros) {
-        const [respuesta] = await connection.query(query, [
-            libro.id,
-            libro.Nombre,
-            libro.Genero,
-            libro.Autor,
-            libro.fecha_recepcion,
-            libro.cantidad_copias,
-            libro.edad_sugerida,
-            libro.editorial,
-            libro.precio,
-            libro.estado
-        ]);
-        LibrosInsertados = respuesta.affectedRows > 0 ? true : false;
-        }
-    if (LibrosInsertados) {
-        res.status(201).json({ message: "Libros insertados correctamente", data: libros });
-    } else {
-        res.status(500).json({ message: "Error al insertar los libros" });
-    }
+// 1. Ruta de prueba rápida en el propio app.js para verificar que el puerto funciona
+app.get('/test-api', (req, res) => {
+    return res.json({ message: "¡El servidor Express de la UCN está vivo!" });
 });
+
+// 2. Conectamos los enrutadores modulares de tus archivos
+app.use('/trabajador', trabajadorRouter);
+app.use('/libros', libroRouter); 
+
+// Levantamos el servidor
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto http://localhost:${PORT}`);
 });
