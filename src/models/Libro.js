@@ -1,14 +1,16 @@
 import connection from '../database/DataBase.js';
 
 export class Libro {
-    //Punto 1: Registrar un nuevo libro
+//Punto 1: Registrar un nuevo libro
     static async registrar(data) {
         try {
+            // AGREGADO: Se incluye 'id' al principio de la estructura y en los VALUES
             const query = `
-                INSERT INTO Libro (Nombre, Genero, Autor, fecha_recepcion, cantidad_copias, edad_sugerida, editorial, precio, estado) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO Libro (id, Nombre, Genero, Autor, fecha_recepcion, cantidad_copias, edad_sugerida, editorial, precio, estado) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
             const [respuesta] = await connection.query(query, [
+                data.id, // <-- AGREGADO: Pasamos el id que viene desde el api.http
                 data.Nombre, 
                 data.Genero, 
                 data.Autor, 
@@ -17,7 +19,7 @@ export class Libro {
                 data.edad_sugerida, 
                 data.editorial, 
                 data.precio, 
-                true //El estado inicia en true (activo) automaticamente al ingresar
+                true // El estado inicia en true (activo) automaticamente al ingresar
             ]);
             return respuesta;
         } catch (error) {
@@ -72,11 +74,11 @@ export class Libro {
         }
     }
 
-   //Punto 13: Incrementar el stock de un libro 
+    //Punto 13: Incrementar el stock de un libro 
     static async agregarCopia(Libroid, codigoBarra) {
         try {
-            const query = 'INSERT INTO Copia_libro (LibroId, codigo_barras, estado) VALUES (?, ?, 1)';
-            const [result] = await connection.query(query, [Libroid, codigoBarra]);
+            const query = 'INSERT INTO Copia_libro (codigo_barra, estado, LibroId) VALUES (?, 1, ?)';
+            const [result] = await connection.query(query, [codigoBarra, Libroid]);
             return result;
         } catch (error) {
             throw new Error("Error en el modelo Libro (agregarCopia): " + error.message);
