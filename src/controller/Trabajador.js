@@ -18,7 +18,7 @@ export class TrabajadorController{
 
             console.log(Data);
 
-            //Llamar al metodo IniciarSesion del modelo Trabajdor para verificar  las crdenciales del trabajador 
+            //Llamar al metodo IniciarSesion del modelo Trabajdor para verificar las crdenciales del trabajador 
             const respuesta = await Trabajador.IniciarSesion(Data);
 
             if (respuesta.data == null) {
@@ -42,9 +42,8 @@ export class TrabajadorController{
                 "data" : null
             });
         } 
-        
+    
     } 
-
 
     static async RegistrarTrabajador(req,res){
         try{

@@ -1,7 +1,7 @@
 import connection from '../database/DataBase.js';
 
 export class Libro {
-    //1 Registrar un nuevo libro con los datos exactos que tienes en tu lista
+    //Punto 1: Registrar un nuevo libro
     static async registrar(data) {
         try {
             const query = `
@@ -25,7 +25,19 @@ export class Libro {
         }
     }
 
-    //4 Actualizar el precio de un libro (Debe ser mayor al actual)
+    //Punto 3: Eliminar (deshabilitar) una copia de libro
+    static async deshabilitarCopia(idCopia) {
+        try {
+            const query = 'UPDATE Copia_libro SET estado = 0 WHERE id = ?';
+            const [result] = await connection.query(query, [idCopia]);
+            return result;
+        } catch (error) {
+            throw new Error("Error en el modelo Libro (deshabilitarCopia): " + error.message);
+        }
+    }
+
+
+    //Punto 4: Actualizar el precio de un libro (Debe ser mayor al actual)
     static async actualizarPrecio(id, nuevoPrecio) {
         try {
             //Buscamos el precio actual en la base de datos para comparar
@@ -45,14 +57,29 @@ export class Libro {
         }
     }
 
-    //11 Listar todos los libros disponibles (con stock activo)
+    //Punto 11: Listar libros con stock disponible
     static async listarDisponibles() {
         try {
-            const query = 'SELECT * FROM Libro WHERE cantidad_copias > 0 AND estado = true';
+            const query = `
+                SELECT DISTINCT l.* FROM Libro l
+                INNER JOIN Copia_libro cl ON l.id = cl.Libroid
+                WHERE cl.estado = 1
+            `;
             const [rows] = await connection.query(query);
             return rows;
         } catch (error) {
-            throw new Error("Error al listar libros disponibles: " + error.message);
+            throw new Error("Error en el modelo al listar libros disponibles: " + error.message);
+        }
+    }
+
+   //Punto 13: Incrementar el stock de un libro 
+    static async agregarCopia(Libroid, codigoBarra) {
+        try {
+            const query = 'INSERT INTO Copia_libro (LibroId, codigo_barras, estado) VALUES (?, ?, 1)';
+            const [result] = await connection.query(query, [Libroid, codigoBarra]);
+            return result;
+        } catch (error) {
+            throw new Error("Error en el modelo Libro (agregarCopia): " + error.message);
         }
     }
 }

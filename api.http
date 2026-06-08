@@ -1,42 +1,183 @@
-//Prueba 1: Ver si el servidor responde en general
+#Prueba global inicial para verificar que el servidor Express este arriba
 GET http://localhost:3000/test-api
 
-### -----LIBRO----- ###
+### -------------------------------------------------------------------------
+### MODULO 1: GESTION DE LIBROS ###
+### -------------------------------------------------------------------------
 
-//Insertar el libro
+### Punto 1: Registrar un nuevo Libro
 POST http://localhost:3000/libros
 Content-Type: application/json
 
 {
-  "id": 1,
-  "Nombre": "El Resplandor",
-  "Genero": 1,
-  "Autor": "Stephen King",
-  "fecha_recepcion": "2026-06-06",
-  "cantidad_copias": 5,
-  "edad_sugerida": 18,
-  "editorial": "Debolsillo",
-  "precio": 15000,
+  "id": 2,
+  "Nombre": "Este taller ya salio",
+  "Genero": 3, 
+  "Autor": "Estudiante de Ingenieria",
+  "fecha_recepcion": "2026-06-07",
+  "cantidad_copias": 3,
+  "edad_sugerida": 0,
+  "editorial": "UCN",
+  "precio": 5000,
   "estado": true
 }
 
 ###
 
-###Listar todos los Libros Disponibles con Stock (Punto 11 del Taller)
-GET http://localhost:3000/libros/disponibles
+### Punto 3: Eliminar (deshabilitar) una copia de libro específica
+PATCH http://localhost:3000/libros/1/copia/3
 
+###
 
-### -----TRABAJADOR----- ###
-
-//No funciona
-//Probar Registro de Trabajador
-POST http://localhost:3000/trabajador/registro
+### Punto 4a: Actualizar precio de un libro (EXITO: Precio nuevo mayor al actual)
+PUT http://localhost:3000/libros/1/precio
 Content-Type: application/json
 
 {
-  "rut": "12345678-9",
-  "nombre": "Diego Pérez",
-  "correo": "diego@ucn.cl",
-  "contrasena": "clave123",
-  "bono": 50000
+  "precio": 20000
 }
+
+###
+
+### Punto 4b: Actualizar precio de un libro (FALLO esperado: Intentar bajarlo o dejarlo igual)
+PUT http://localhost:3000/libros/1/precio
+Content-Type: application/json
+
+{
+  "precio": 15000
+}
+
+###
+
+### Punto 11: Listar todos los Libros Disponibles con Stock
+GET http://localhost:3000/libros/disponibles
+
+###
+
+### Punto 13: Incrementar el stock de un libro (Aumentar una copia)
+POST http://localhost:3000/libros/incrementar-stock
+Content-Type: application/json
+
+{
+  "Libroid": 1
+}
+
+
+### -------------------------------------------------------------------------
+### MODULO 2: GESTIÓN DE USUARIOS Y CLIENTES
+### -------------------------------------------------------------------------
+
+### Punto 2: Registrar un nuevo Usuario
+POST http://localhost:3000/usuario
+Content-Type: application/json
+
+{
+  "nombre": "Juan Cortez",
+  "edad": 21,
+  "rut": "11111111-1",
+  "direccion": "Av. Angamos 0610, Antofagasta"
+}
+
+###
+
+### Punto 5: Eliminar (desactivar) un usuario (Borrado logico)
+PATCH http://localhost:3000/usuario/1/desactivar
+
+###
+
+### Punto 8: Listar usuarios y bibliotecarias unificados
+GET http://localhost:3000/usuario/personal-sistema
+
+###
+
+### Punto 9: Listar usuarios con al menos un prestamo/venta
+GET http://localhost:3000/usuario/con-movimientos
+
+###
+
+### Punto 10: Listar todos los clientes del sistema
+GET http://localhost:3000/usuario/todos
+
+
+### -------------------------------------------------------------------------
+### MODULO 3: GESTION DE TRABAJADORES (BIBLIOTECARIAS)
+### -------------------------------------------------------------------------
+
+# POST http://localhost:3000/trabajador/registro
+# Content-Type: application/json
+# {
+#   "rut": "12345678-9",
+#   "nombre": "Diego Pérez",
+#   "correo": "diego@ucn.cl",
+#   "contrasena": "clave123",
+#   "bono": 50000
+# }
+
+### -------------------------------------------------------------------------
+### MODULO 4: TRANSACCIONES (VENTAS / PRESTAMOS) Y ESTADISTICAS
+### -------------------------------------------------------------------------
+
+### Punto 6a: Registrar una nueva Venta con multiples libros validos
+POST http://localhost:3000/transaccion/create
+Content-Type: application/json
+
+{
+  "TrabajadorId": 1,
+  "Usuarioid": 1,
+  "Copia_libroid": [1, 5], 
+  "es_venta": true,
+  "es_prestamo": false
+}
+
+###
+
+### Punto 6b: Registrar transacción invalida (FALLO esperado: Prestamo y venta a la vez)
+POST http://localhost:3000/transaccion/create
+Content-Type: application/json
+
+{
+  "TrabajadorId": 1,
+  "Usuarioid": 1,
+  "Copia_libroid": [2],
+  "es_venta": true,
+  "es_prestamo": true
+}
+
+###
+
+### Punto 6c: Registrar transaccion invalida (FALLO esperado: Copia de libro deshabilitada)
+POST http://localhost:3000/transaccion/create
+Content-Type: application/json
+
+{
+  "TrabajadorId": 1,
+  "Usuarioid": 1,
+  "Copia_libroid": [1, 3],
+  "es_venta": true,
+  "es_prestamo": false
+}
+
+###
+
+### Punto 7: Consultar detalle de prestamo/venta de un usuario especifico para una fecha determinada
+GET http://localhost:3000/transaccion/usuario-detalle?usuarioId=1&fecha=2026-06-07
+
+###
+
+### Punto 12: Listar libros con movimiento recientemente (Semana actual)
+GET http://localhost:3000/transaccion/semana-actual
+
+###
+
+### Punto 14: Cantidad de libros vendidos en el año actual
+GET http://localhost:3000/transaccion/total-vendidos-anio
+
+###
+
+### Punto 15: Top 10 libros de Ficcion mas vendidos del Semestre 1-2026
+GET http://localhost:3000/transaccion/top10-ficcion
+
+###
+
+### Punto 16: Los 10 libros menos prestados de Comedia del Semestre 2-2025
+GET http://localhost:3000/transaccion/menos-prestados-comedia
