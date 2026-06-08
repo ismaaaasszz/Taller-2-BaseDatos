@@ -18,4 +18,5 @@ router.get('/disponibles', LibroController.listarDisponibles);
 //13. Incrementar stock (POST /libros/incrementar-stock)
 router.post('/incrementar-stock', LibroController.incrementarStock);
 
+//a
 export default router;
